@@ -16,8 +16,8 @@ class MovieViewModel {
         self.networkService = networkService
     }
 
-    func getMovies(isPopular: Bool, includeAdult: Bool, language: String, voteAvg: (String, String)) {
-        networkService.fetchMovies(isPopular: isPopular, includeAdult: includeAdult, language: language, voteAvg: voteAvg) { [weak self] result in
+    func getMovies(isPopular: Bool, includeAdult: Bool, language: String)  {
+        networkService.fetchMovies(isPopular: isPopular, includeAdult: includeAdult, language: language) { [weak self] result in
             switch result {
             case .success(let movies):
                 self?.delegate?.didReceiveMovies(movies)

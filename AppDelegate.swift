@@ -11,9 +11,12 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
-        return true
-    }
+          // Llama a registerCredentials al iniciar la aplicación
+          Task {
+              await MovieService.shared.registerCredentials()
+          }
+          return true
+      }
 
     // MARK: UISceneSession Lifecycle
 

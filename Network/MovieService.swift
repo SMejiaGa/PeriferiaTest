@@ -10,8 +10,8 @@ import Foundation
 public class MovieService {
 
     static let shared = MovieService()
-
-    func registerCredentials() async -> Bool {
+    
+    func registerCredentials() async {
         let url = URL(string: "https://api.themoviedb.org/3/account/21278215")!
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -25,28 +25,24 @@ public class MovieService {
             let (data, response) = try await URLSession.shared.data(for: request)
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 print(String(decoding: data, as: UTF8.self))
-                return true
             } else {
                 print("Error en la respuesta: \(response)")
-                return false
             }
         } catch {
             print("Error al realizar la solicitud: \(error.localizedDescription)")
-            return false
         }
     }
     
-    func fetchMovies(isPopular: Bool, includeAdult: Bool, language: String, voteAvg: (String, String), completion: @escaping (Result<[Movie], Error>) -> Void) {
+    func fetchMovies(isPopular: Bool, includeAdult: Bool, language: String, completion: @escaping (Result<[Movie], Error>) -> Void) {
         let url = URL(string: "https://api.themoviedb.org/3/movie/\(isPopular ? "popular" : "top_rated")")!
             var components = URLComponents(url: url, resolvingAgainstBaseURL: true)!
             let queryItems: [URLQueryItem] = [
+            URLQueryItem(name: "api_key", value: "21278215"),
             URLQueryItem(name: "include_adult", value: includeAdult ? "true" : "false"),
             URLQueryItem(name: "include_video", value: "false"),
             URLQueryItem(name: "language", value: language),
             URLQueryItem(name: "page", value: "1"),
             URLQueryItem(name: "sort_by", value: "popularity.desc"),
-            URLQueryItem(name: "vote_average.gte", value: voteAvg.0),
-            URLQueryItem(name: "vote_average.lte", value: voteAvg.1)
         ]
             components.queryItems = components.queryItems.map { $0 + queryItems } ?? queryItems
 

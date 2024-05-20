@@ -22,18 +22,40 @@
                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="FfA-So-PKK">
                                         <rect key="frame" x="178.66666666666666" y="349.33333333333337" width="20" height="20"/>
                                     </activityIndicatorView>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="msG-uI-Ie6">
-                                        <rect key="frame" x="8" y="8" width="361" height="702.33333333333337"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" springLoaded="YES" translatesAutoresizingMaskIntoConstraints="NO" id="msG-uI-Ie6">
+                                        <rect key="frame" x="8" y="56" width="361" height="654.33333333333337"/>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                     </tableView>
+                                    <searchBar contentMode="redraw" translatesAutoresizingMaskIntoConstraints="NO" id="3ZN-NP-4uV">
+                                        <rect key="frame" x="0.0" y="0.0" width="377" height="56"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="Y6W-OH-hqX" id="dNX-Xr-u8q"/>
+                                        </connections>
+                                    </searchBar>
+                                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="?" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r3E-oY-MEF">
+                                        <rect key="frame" x="16" y="349" width="345" height="20.333333333333314"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <constraints>
+                                    <constraint firstItem="msG-uI-Ie6" firstAttribute="top" secondItem="3ZN-NP-4uV" secondAttribute="bottom" id="487-Ad-7z5"/>
+                                    <constraint firstItem="3ZN-NP-4uV" firstAttribute="top" secondItem="TdG-PU-iCD" secondAttribute="top" id="CCL-zT-dcV"/>
+                                    <constraint firstItem="r3E-oY-MEF" firstAttribute="leading" secondItem="TdG-PU-iCD" secondAttribute="leading" constant="16" id="CSe-Fd-H0T"/>
+                                    <constraint firstItem="r3E-oY-MEF" firstAttribute="centerY" secondItem="TdG-PU-iCD" secondAttribute="centerY" id="CdM-Mp-KqT"/>
                                     <constraint firstItem="FfA-So-PKK" firstAttribute="centerX" secondItem="TdG-PU-iCD" secondAttribute="centerX" id="Hkm-jk-6mU"/>
+                                    <constraint firstAttribute="trailing" secondItem="r3E-oY-MEF" secondAttribute="trailing" constant="16" id="JP2-o9-OqM"/>
                                     <constraint firstAttribute="bottom" secondItem="msG-uI-Ie6" secondAttribute="bottom" constant="8" id="JgX-dh-q6U"/>
-                                    <constraint firstItem="msG-uI-Ie6" firstAttribute="top" secondItem="TdG-PU-iCD" secondAttribute="top" constant="8" id="bd9-Gx-7iz"/>
+                                    <constraint firstAttribute="trailing" secondItem="3ZN-NP-4uV" secondAttribute="trailing" id="R3l-ba-OJa"/>
+                                    <constraint firstItem="r3E-oY-MEF" firstAttribute="centerX" secondItem="TdG-PU-iCD" secondAttribute="centerX" id="XzU-W0-UF5"/>
+                                    <constraint firstItem="r3E-oY-MEF" firstAttribute="centerY" secondItem="TdG-PU-iCD" secondAttribute="centerY" id="YsW-hY-fiM"/>
                                     <constraint firstItem="FfA-So-PKK" firstAttribute="centerY" secondItem="TdG-PU-iCD" secondAttribute="centerY" id="cxR-xU-gcH"/>
                                     <constraint firstItem="msG-uI-Ie6" firstAttribute="leading" secondItem="TdG-PU-iCD" secondAttribute="leading" constant="8" id="muV-xM-VK8"/>
+                                    <constraint firstItem="3ZN-NP-4uV" firstAttribute="leading" secondItem="TdG-PU-iCD" secondAttribute="leading" id="sLC-VQ-j6N"/>
+                                    <constraint firstItem="r3E-oY-MEF" firstAttribute="centerX" secondItem="TdG-PU-iCD" secondAttribute="centerX" id="uLs-2t-OHu"/>
                                     <constraint firstAttribute="trailing" secondItem="msG-uI-Ie6" secondAttribute="trailing" constant="8" id="zNR-Lc-0lE"/>
                                 </constraints>
                             </view>
@@ -50,6 +72,11 @@
                                     <segment title="Top Rated"/>
                                 </segments>
                             </segmentedControl>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GxB-Rh-rzr">
+                                <rect key="frame" x="315" y="55.333333333333343" width="62" height="35"/>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Filter"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -62,13 +89,19 @@
                             <constraint firstItem="MqT-f9-njT" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="Tyt-ta-TA7"/>
                             <constraint firstItem="pk8-3y-chf" firstAttribute="top" secondItem="MqT-f9-njT" secondAttribute="bottom" constant="8" id="iQM-da-jrl"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="pk8-3y-chf" secondAttribute="trailing" constant="25" id="mie-zb-tCL"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="GxB-Rh-rzr" secondAttribute="trailing" constant="16" id="mwL-w6-5lH"/>
+                            <constraint firstItem="GxB-Rh-rzr" firstAttribute="centerY" secondItem="MqT-f9-njT" secondAttribute="centerY" id="nL1-7I-GL5"/>
                             <constraint firstAttribute="bottom" secondItem="TdG-PU-iCD" secondAttribute="bottom" id="z3M-wf-9SE"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="FfA-So-PKK" id="yaf-9w-TeF"/>
+                        <outlet property="emptyResultLabel" destination="r3E-oY-MEF" id="Exj-Ai-usD"/>
+                        <outlet property="filterButton" destination="GxB-Rh-rzr" id="c9R-u4-93m"/>
                         <outlet property="generalFilterSegmentedControl" destination="pk8-3y-chf" id="BYs-gn-Fs8"/>
                         <outlet property="innerView" destination="TdG-PU-iCD" id="Ecb-uN-tc1"/>
                         <outlet property="moviesDataTableView" destination="msG-uI-Ie6" id="B2L-pY-tqa"/>
+                        <outlet property="searchBar" destination="3ZN-NP-4uV" id="QQT-4s-riP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
