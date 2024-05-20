@@ -6,3 +6,24 @@
 //
 
 import Foundation
+
+class MovieViewModel {
+    
+    weak var delegate: MovieViewModelDelegate?
+    private var networkService: MovieService
+
+    init(networkService: MovieService = MovieService()) {
+        self.networkService = networkService
+    }
+
+    func getMovies(isPopular: Bool, includeAdult: Bool, language: String, voteAvg: (String, String)) {
+        networkService.fetchMovies(isPopular: isPopular, includeAdult: includeAdult, language: language, voteAvg: voteAvg) { [weak self] result in
+            switch result {
+            case .success(let movies):
+                self?.delegate?.didReceiveMovies(movies)
+            case .failure(let error):
+                self?.delegate?.didFailWithError(error)
+            }
+        }
+    }
+}

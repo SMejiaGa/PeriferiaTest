@@ -10,55 +10,93 @@ import UIKit
 class MovieListViewController: UIViewController {
     
     @IBOutlet weak var innerView: UIView!
-    @IBOutlet weak var popularTableView: UITableView!
-    @IBOutlet weak var topRatedTableView: UITableView!
+    @IBOutlet weak var moviesDataTableView: UITableView!
     @IBOutlet weak var generalFilterSegmentedControl: UISegmentedControl!
-    let cellIdentifier = "MoviesListTableViewTableViewCell"
+    
+    let cellIdentifier = "MovieTableViewCell"
+    var viewModel = MovieViewModel()
+    var moviesList: [Movie] = []
+    var filteredMoviesList: [Movie] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
-        
-        generalFilterSegmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
-        view.addSubview(generalFilterSegmentedControl)
-        
-        popularTableView.dataSource = self
-        popularTableView.delegate = self
-        popularTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
-        
-        topRatedTableView.dataSource = self
-        topRatedTableView.delegate = self
-        topRatedTableView.register(UITableViewCell.self, forCellReuseIdentifier: cellIdentifier)
-        
-        view.addSubview(popularTableView)
+        viewModel.delegate = self
+        setupView()
+        applyFilters(includeAdult: false, language: "en", voteAvg: ("0", "10"))
+        print("print works!")
     }
     
     @objc func segmentChanged() {
-        if generalFilterSegmentedControl.selectedSegmentIndex == 0 {
-            topRatedTableView.isHidden = true
-            popularTableView.isHidden = false
+        applyFilters(includeAdult: false, language: "en", voteAvg: ("0","10"))
+    }
+    
+    func applyFilters(includeAdult: Bool, language: String, voteAvg: (String, String)) {
+        moviesDataTableView.isHidden = true
+        viewModel.getMovies(isPopular: generalFilterSegmentedControl.selectedSegmentIndex == 0 ? true : false, includeAdult: includeAdult, language: language, voteAvg: voteAvg)
+    }
+    
+    func setupView() {
+        setupTableViews()
+        generalFilterSegmentedControl.addTarget(self, action: #selector(segmentChanged), for: .valueChanged)
+    }
+    
+    func setupTableViews() {
+        moviesDataTableView.dataSource = self
+        moviesDataTableView.delegate = self
+        moviesDataTableView.register(UINib(nibName: cellIdentifier, bundle: nil), forCellReuseIdentifier: cellIdentifier)
+        
+    }
+    
+}
 
-        } else {
-            topRatedTableView.isHidden = false
-            popularTableView.isHidden = true
+extension MovieListViewController: MovieViewModelDelegate {
+    
+    func didReceiveMovies(_ movies: [Movie]) {
+        filteredMoviesList = movies.filter { $0.overview.isEmpty == false }
+        moviesList = filteredMoviesList
+        DispatchQueue.main.async {
+            self.moviesDataTableView.reloadData()
+            self.moviesDataTableView.isHidden = false
         }
+    }
+    
+    func didFailWithError(_ error: Error) {
+        print("Failed to get movies: \(error.localizedDescription)")
     }
 }
 
 extension MovieListViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return moviesList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if tableView == popularTableView {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-            cell.textLabel?.text = "Table 1 Row \(indexPath.row)"
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath)
-            cell.textLabel?.text = "Table 2 Row \(indexPath.row)"
-            return cell
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? MovieTableViewCell else {
+            return UITableViewCell()
         }
+        let movie = moviesList[indexPath.row]
+        cell.config(movie: movie)
+        return cell
+        
+    }
+}
+
+extension UIImageView {
+    func loadImage(from url: URL) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error downloading image: \(error.localizedDescription)")
+                return
+            }
+            
+            guard let data = data, let image = UIImage(data: data) else {
+                print("Error converting data to image")
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self.image = image
+            }
+        }.resume()
     }
 }
